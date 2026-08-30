@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2026 Zequinza <felipe828218@gmail.com>
+# SPDX-FileCopyrightText: 2026 Whiskey Station Contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+# A pílula e o vidro que o Psicólogo carrega. Mesma forma do PillSpaceDrugs e
+# do PillCanisterSpaceDrugs, que é o que ele já tinha no bolso.
+- type: entity
+  name: pill
+  parent: Pill
+  id: PillWhiskeyEuforico
+  suffix: Eufórico 20u
+  components:
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: WhiskeyEuforico
+        Quantity: 20
+
+- type: entity
+  parent: PillCanister
+  id: PillCanisterWhiskeyEuforico
+  suffix: Eufórico 20u, 7
+  components:
+  - type: Label
+    localizedLabel: reagent-name-whiskey-euforico
+  - type: EntityTableContainerFill
+    containers:
+      storagebase:
+        id: PillWhiskeyEuforico
+        # Sete e não quinze: o vidro do Psicólogo tem que acabar dentro de uma
+        # rodada, senão ele nunca precisa da química e o cargo não interage com
+        # ninguém para repor.
+        amount: 7
