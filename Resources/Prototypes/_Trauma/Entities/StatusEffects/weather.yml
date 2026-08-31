@@ -106,3 +106,11 @@
       duration:
         min: 10
         max: 10
+    # <Whiskey> - o /tg/station avisa quando a ameaça passa, e aqui não avisava.
+    # Sem clima, é só o recado de que dá para sair do abrigo. Um estágio sem
+    # weather nenhum encerra o agendador logo em seguida, porque ele é temporary.
+    - message: radiation-storm-over
+      duration:
+        min: 1
+        max: 1
+    # </Whiskey>
