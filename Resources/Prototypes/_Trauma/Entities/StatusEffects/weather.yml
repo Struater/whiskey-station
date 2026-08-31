@@ -18,6 +18,16 @@
   parent: WeatherFallout
   id: WeatherRadiationStorm
   components:
+  # <Whiskey> - a tempestade tocava som de nevasca fraca, herdado do fallout.
+  # O /tg/station usa alarme aqui, e o mesmo arquivo já existe no repositório.
+  # Volume igual ao herdado, para ajustar depois de ouvir em jogo.
+  - type: WeatherStatusEffect
+    sound:
+      path: /Audio/Announcements/bloblarm.ogg
+      params:
+        loop: true
+        volume: -6
+  # </Whiskey>
   - type: WeatherEffects
     conditions:
     - !type:WhitelistCondition
