@@ -19,11 +19,20 @@
   id: WeatherRadiationStorm
   components:
   # <Whiskey> - a tempestade tocava som de nevasca fraca, herdado do fallout.
-  # O /tg/station usa alarme aqui, e o mesmo arquivo já existe no repositório.
-  # Volume igual ao herdado, para ajustar depois de ouvir em jogo.
+  # Alarme nuclear pedido pela host.
+  #
+  # NÃO usar o /Audio/Machines/Nuke/nuke_alarm.ogg, que seria o literal: ele é
+  # o alarme da bomba armada, em NukeComponent.AlertSound. Emprestar esse som
+  # para a tempestade faz quem ouve achar que a estação vai explodir, e são
+  # dois eventos muito diferentes.
+  #
+  # O meltdown_siren da mesma pasta também serviria, mas é CC-BY-NC-SA-3.0, e
+  # non-commercial não combina com o AGPL do repositório.
+  #
+  # Volume igual ao que ele já herdava, para ajustar depois de ouvir em jogo.
   - type: WeatherStatusEffect
     sound:
-      path: /Audio/Announcements/bloblarm.ogg
+      path: /Audio/_FarHorizons/Machines/reactor_alarm_3.ogg
       params:
         loop: true
         volume: -6
