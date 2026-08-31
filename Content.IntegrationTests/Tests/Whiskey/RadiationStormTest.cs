@@ -9,7 +9,9 @@ using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Server.StationEvents.Components;
 using Content.Trauma.Server.Weather;
+using Content.Shared.Weather;
 using Content.Trauma.Shared.Weather;
+using Robust.Shared.Audio;
 using NUnit.Framework;
 using Robust.Shared.Localization;
 using Robust.Shared.Prototypes;
@@ -111,6 +113,42 @@ public sealed class RadiationStormTest : GameTest
             Assert.That(mensagens.Select(m => m.ToString()), Does.Contain("radiation-storm-over"),
                 "falta o recado de que a ameaça passou, que é o que libera sair do abrigo");
         });
+
+        await Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// O alarme tem que estar no estágio, e não no som do clima.
+    ///
+    /// Escrito depois de ele não tocar em jogo: o som do WeatherStatusEffect é
+    /// ambiental e o cliente abafa para nada quando não existe tile exposto por
+    /// perto, então quem está no meio da estação não ouve. O dano ignora teto,
+    /// o som não.
+    /// </summary>
+    [Test]
+    public async Task OAlarmeDaTempestadeEGlobal()
+    {
+        var protos = Server.ProtoMan;
+        var nomeAgenda = Server.EntMan.ComponentFactory.GetComponentName(typeof(WeatherSchedulerComponent));
+        var nomeClima = Server.EntMan.ComponentFactory.GetComponentName(typeof(WeatherStatusEffectComponent));
+
+        Assert.That(protos.Index(Agendador).Components.TryGetComponent(nomeAgenda, out var rawAgenda), Is.True);
+        var agendador = (WeatherSchedulerComponent) rawAgenda!;
+        var estagio = agendador.Stages.First(e => e.Weather == Tempestade);
+
+        Assert.That(estagio.Sound, Is.Not.Null,
+            "o alarme precisa estar no estágio, que toca global, e não no som do clima");
+
+        // E o som do próprio clima não pode virar o alarme de novo: ali ele fica
+        // preso na oclusão e some para quem está longe de um tile exposto.
+        if (protos.Index(Tempestade).Components.TryGetComponent(nomeClima, out var rawClima))
+        {
+            var clima = (WeatherStatusEffectComponent) rawClima!;
+            var caminho = (clima.Sound as SoundPathSpecifier)?.Path.ToString() ?? "";
+            TestContext.Out.WriteLine($"ambiente do clima: {caminho}");
+            Assert.That(caminho, Does.Not.Contain("alarm"),
+                "alarme como som de clima não alcança quem está dentro da estação");
+        }
 
         await Task.CompletedTask;
     }
