@@ -14,7 +14,6 @@
   - Heretic
   - Blob
   - Shadowling
-  - Insurgent
   friendly:
   - Wizard # was hostile, now they're friendly
   - PirateFaction
@@ -44,24 +43,15 @@
   - Wizard
   - Xenoborg
   # <Trauma>
-  - Insurgent
   - CrabFaction
   # </Trauma>
 
 - type: npcFaction
   id: Mouse
   # Goobstation - not hostile to anything so they don't attack things
-  # <Trauma>
-  hostile:
-  - Insurgent
-  # </Trauma>
 
 - type: npcFaction
   id: Passive
-  # <Trauma>
-  hostile:
-  - Insurgent
-  # </Trauma>
 
 - type: npcFaction
   id: PetsNT
@@ -80,7 +70,6 @@
   - AllHostile
   - Dragon
   # <Trauma>
-  - Insurgent
   - CrabFaction
   # </Trauma>
 
@@ -103,9 +92,6 @@
   - Blob
   - PirateFaction
   - Lavafauna
-  # <Trauma>
-  - Insurgent
-  # </Trauma>
   friendly:
   - Wizard # was hostile, now they're friendly
   - Shadowling
@@ -114,10 +100,6 @@
 
 - type: npcFaction
   id: SimpleNeutral
-  # <Trauma>
-  hostile:
-  - Insurgent
-  # </Trauma>
 
 - type: npcFaction
   id: Syndicate
@@ -141,7 +123,6 @@
   - Wizard
   - Xenoborg
   # <Trauma>
-  - Insurgent
   - CrabFaction
   # </Trauma>
 
@@ -166,7 +147,6 @@
   - Dragon
   - Xenoborg
   # <Trauma>
-  - Insurgent
   - CrabFaction
   # </Trauma>
   friendly: # Goob - wizard is now friendly
@@ -178,7 +158,6 @@
   friendly:
   - InitialInfected
   hostile:
-  - Insurgent
   - Changeling
   - Heretic
   - Blob
@@ -228,7 +207,6 @@
   - Wizard
   - Xenoborg
   # <Trauma>
-  - Insurgent
   - CrabFaction
   # </Trauma>
 
@@ -258,7 +236,6 @@
   - Wizard
   - Xenoborg
   # <Trauma>
-  - Insurgent
   - CrabFaction
   # </Trauma>
 
@@ -278,9 +255,6 @@
   - Revolutionary
   - AllHostile
   - Xenoborg
-  # <Trauma>
-  - Insurgent
-  # </Trauma>
 
 - type: npcFaction
   id: Xenoborg
@@ -302,6 +276,3 @@
   # cause they are hostile to them
   - SimpleHostile
   - AllHostile
-  # <Trauma>
-  - Insurgent
-  # </Trauma>
