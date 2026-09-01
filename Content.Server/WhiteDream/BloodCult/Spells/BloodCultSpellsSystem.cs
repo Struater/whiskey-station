@@ -22,6 +22,7 @@ using Content.Goobstation.Shared.ListViewSelector;
 using Content.Trauma.Common.RadialSelector;
 using Content.Shared.Speech.Muting;
 using Content.Shared.WhiteDream.BloodCult.Spells;
+using Content.Shared.WhiteDream.BloodCult;
 using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio; // WhiteDream - AudioParams
@@ -208,8 +209,9 @@ public sealed partial class BloodCultSpellsSystem : EntitySystem
 
         cultist.Comp.SelectedSpells.Add(action.Value);
 
-        // WhiteDream - preparing a spell cuts you up, just like drawing a rune
-        _damageable.TryChangeDamage(cultist.Owner, cultist.Comp.SpellCreationDamage, true, origin: cultist.Owner);
+        // Whiskey - preparing a spell still costs blood, but ritual costs must not fracture body parts.
+        var creationDamage = BloodCultDamage.WithoutWounds(cultist.Comp.SpellCreationDamage);
+        _damageable.TryChangeDamage(cultist.Owner, creationDamage, true, origin: cultist.Owner);
         _audio.PlayPvs(cultist.Comp.SpellCreationEndSound, cultist.Owner, AudioParams.Default.WithMaxDistance(2f));
     }
 
