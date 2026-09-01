@@ -15,12 +15,14 @@ using Content.Shared.Actions.Events;
 using Content.Shared.Clothing.Components;
 using Content.Shared.Cuffs.Components;
 using Content.Shared.DoAfter;
+using Content.Shared.Hands.Components;
 using Content.Shared.Inventory;
 using Content.Shared.Mindshield;
 using Content.Shared.Popups;
 using Content.Goobstation.Shared.ListViewSelector;
 using Content.Trauma.Common.RadialSelector;
 using Content.Shared.Speech.Muting;
+using Content.Shared.Tag;
 using Content.Shared.WhiteDream.BloodCult.Spells;
 using Content.Shared.WhiteDream.BloodCult;
 using Robust.Server.Audio;
@@ -39,6 +41,7 @@ public sealed partial class BloodCultSpellsSystem : EntitySystem
 {
     // Trauma - muting moved to the new status effect system
     private static readonly EntProtoId MutedEffect = "StatusEffectMuted";
+    private static readonly ProtoId<TagPrototype> BoundBloodRiteTag = "BloodRiteBoundItem"; // Whiskey
 
     [Dependency] private IPrototypeManager _proto = default!;
 
@@ -54,6 +57,7 @@ public sealed partial class BloodCultSpellsSystem : EntitySystem
     [Dependency] private PopupSystem _popup = default!;
     [Dependency] private StatusEffectsNewSystem _statusEffectsNew = default!; // Trauma
     [Dependency] private SharedStunSystem _stun = default!;
+    [Dependency] private TagSystem _tag = default!; // Whiskey
     [Dependency] private UserInterfaceSystem _ui = default!;
     [Dependency] private DamageableSystem _damageable = default!; // WhiteDream
     [Dependency] private AudioSystem _audio = default!; // WhiteDream
@@ -146,8 +150,33 @@ public sealed partial class BloodCultSpellsSystem : EntitySystem
         if (args.Handled)
             return;
 
-        RemoveBloodSpells(cultist);
+        // Whiskey - temporary rites become held items after their one-use action disappears.
+        // Dismiss those items here so the removal action can free the hand as expected.
+        var removedBoundRite = RemoveBoundBloodRites(cultist);
+        if (!removedBoundRite || cultist.Comp.SelectedSpells.Count > 0)
+            RemoveBloodSpells(cultist);
+
         args.Handled = true;
+    }
+
+    private bool RemoveBoundBloodRites(Entity<BloodCultSpellsHolderComponent> cultist)
+    {
+        if (!TryComp<HandsComponent>(cultist, out var hands))
+            return false;
+
+        var removed = false;
+        foreach (var hand in _hands.EnumerateHands((cultist.Owner, hands)))
+        {
+            var held = _hands.GetHeldItem((cultist.Owner, hands), hand);
+            if (held == null || !_tag.HasTag(held.Value, BoundBloodRiteTag))
+                continue;
+
+            // Whiskey - explicit spell removal is allowed to bypass the accidental-drop guard.
+            QueueDel(held.Value);
+            removed = true;
+        }
+
+        return removed;
     }
 
     private void OnSpellSelected(Entity<BloodCultSpellsHolderComponent> cultist, ref RadialSelectorSelectedMessage args)

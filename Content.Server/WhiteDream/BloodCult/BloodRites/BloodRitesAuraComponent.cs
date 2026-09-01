@@ -73,7 +73,8 @@ public sealed partial class BloodRitesAuraComponent : Component
     {
         ["BloodSpear"] = 150,
         ["BloodBoltBarrage"] = 500,
-        ["BloodBeamAura"] = 300
+        ["BloodBeamAura"] = 300,
+        ["BloodGazeAura"] = 700 // Whiskey
     };
 
     public DoAfterId? ExtractDoAfterId;
